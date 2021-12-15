@@ -1,32 +1,77 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-card>
+      <v-app-bar
+          app
+          color="cyan"
+          dark
+          flat
+      >
+        <v-spacer></v-spacer>
+
+        <input placeholder="Otsi toodet">
+        <v-btn icon>
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+        <br>
+        <v-btn icon
+               :href="`#/ostukorv`">
+          <v-icon>mdi-cart</v-icon>
+        </v-btn>
+
+        <template v-slot:extension>
+          <v-tabs
+              centered
+              slider-color="yellow"
+          >
+            <v-tab
+                :href="`/`"
+            >
+              <v-btn
+                  color="cyan"
+                  text.color="white">
+                Tooteid valima
+              </v-btn>
+            </v-tab>
+            <v-tab
+                to = "/ostukorv"
+            >
+              <v-btn
+                  color="cyan"
+                  text.color="white"
+                  >
+                Ostukorvi võrdlus
+              </v-btn>
+            </v-tab>
+            <v-tab
+                to ="/puujakoogiviljad"
+            >
+              <v-btn
+                  color="cyan"
+                  text.color="white">
+                Puu- ja Köögiviljad
+              </v-btn>
+            </v-tab>
+          </v-tabs>
+        </template>
+      </v-app-bar>
+
+    </v-card>
+
+    <v-main>
+      <router-view/>
+    </v-main>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
 
-#nav {
-  padding: 30px;
-}
+<script>
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+export default {
+  name: 'App',
 
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+  data: () => ({
+    //
+  }),
+};
+</script>
