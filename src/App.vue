@@ -8,13 +8,9 @@
           flat
       >
         <v-spacer></v-spacer>
-
-        <input placeholder="Otsi toodet">
-        <v-btn icon>
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
         <br>
         <v-btn icon
+               x-large
                :href="`#/ostukorv`">
           <v-icon>mdi-cart</v-icon>
         </v-btn>
@@ -41,15 +37,6 @@
                   text.color="white"
                   >
                 Ostukorvi võrdlus
-              </v-btn>
-            </v-tab>
-            <v-tab
-                to ="/puujakoogiviljad"
-            >
-              <v-btn
-                  color="cyan"
-                  text.color="white">
-                Puu- ja Köögiviljad
               </v-btn>
             </v-tab>
           </v-tabs>

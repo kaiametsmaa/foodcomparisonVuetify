@@ -1,18 +1,39 @@
 <template>
-  <v-container
-  >
-    <h1 class="pa-4">Puu- ja köögiviljad: </h1>
+  <v-container>
+<v-card class="cyan lighten-3">
+    <h1 class="text-left pa-4">Puu- ja köögiviljad: </h1>
+<div class="text-right text-h5">
+    <input class="text-h6 "v-model="search" placeholder="Otsi toodet">
+    <v-btn icon
+           x-large
+           @click="getProductInfoByCategory">
+      <v-icon>mdi-magnify</v-icon>
+    </v-btn>
+</div>
+</v-card>
+    <br>
+    <template>
+      <div class="text-center">
+        <v-pagination
+            v-model="page"
+            :length="count"
+            @input="getProductInfoByCategory"
+        ></v-pagination>
+      </div>
+    </template>
+    <br>
     <template>
       <v-row>
         <v-col
-            v-for="ean2 in 1"
+            v-for="product in products"
             class="d-flex child-flex"
             cols="2">
-          <v-card>
+          <v-card hover height="100%"
+              class="cyan lighten-3">
             <v-img
-                :src="'https://www.selver.ee/img/450/440/resize/2/7/2701385000002.jpg'"
+                :src="product.image"
                 aspect-ratio="1"
-                class="grey lighten-2">
+                class="white">
               <template v-slot:placeholder>
                 <v-row
                     class="fill-height ma-0"
@@ -25,115 +46,96 @@
                 </v-row>
               </template>
             </v-img>
-            <div>
-              <v-card-title
-                  class="cyan lighten-2 text-subtitle-2"
-                  color="cyan"
+
+              <v-card-text
+                  class="cyan lighten-3 text-subtitle-2"
                   text.color="white"
                   style="word-break: break-word">
-                Pirn Conference, kg
+                {{ product.name }}
+              </v-card-text>
+            <br>
                 <v-spacer></v-spacer>
-                <v-alert
-                    v-model="alertVariable"
+            <v-card-actions>
+              <v-alert
+                    v-model="product.alertVariable"
                     border="left"
                     close-text="Close Alert"
                     dismissible>
                   Lisatud ostukorvi
                 </v-alert>
-                <div>
+                <div class="ma-1" style="position: absolute; bottom: 0;">
                   <v-btn
-                      v-if="!alertVariable"
+                      v-if="!product.alertVariable"
                       icon
-                      @click="alertVariable = !alertVariable">
+                      large
+                      @click="userPick(product)"
+                  >
                     <v-icon right>mdi-cart-arrow-down</v-icon>
                   </v-btn>
                 </div>
-              </v-card-title>
-
-            </div>
+            </v-card-actions>
           </v-card>
         </v-col>
-<!--        <v-col-->
-<!--            v-for="ean in 1"-->
-<!--            :key="ean"-->
-<!--            class="d-flex child-flex"-->
-<!--            cols="2"-->
-<!--        >-->
-<!--          <v-card>-->
-<!--            <v-img-->
-<!--                :src="' https://www.selver.ee/img/450/440/resize/4/7/4742818010623.jpg'"-->
-
-<!--                aspect-ratio="1"-->
-<!--                class="grey lighten-2"-->
-<!--            >-->
-<!--              <template v-slot:placeholder>-->
-<!--                <v-row-->
-<!--                    class="fill-height ma-0"-->
-<!--                    align="center"-->
-<!--                    justify="center"-->
-<!--                >-->
-<!--                  <v-progress-circular-->
-<!--                      indeterminate-->
-<!--                      color="grey lighten-5"-->
-<!--                  ></v-progress-circular>-->
-<!--                </v-row>-->
-<!--              </template>-->
-<!--            </v-img>-->
-<!--            <div>-->
-<!--              <v-card-title-->
-<!--                  class="cyan lighten-2 text-subtitle-2"-->
-<!--                  color="cyan"-->
-<!--                  text.color="white"-->
-<!--                  style="word-break: break-word">-->
-<!--                Mahe pirn, 500 g-->
-<!--                <v-spacer></v-spacer>-->
-<!--                <v-alert-->
-<!--                    v-model="alertVariable1"-->
-<!--                    border="left"-->
-<!--                    close-text="Close Alert"-->
-<!--                    dismissible>-->
-<!--                  Lisatud ostukorvi-->
-<!--                </v-alert>-->
-<!--                <div>-->
-<!--                  <v-btn-->
-<!--                      v-if="!alertVariable1"-->
-<!--                      icon-->
-<!--                      @click="alertVariable1 = !alertVariable1">-->
-<!--                    <v-icon right>mdi-cart-arrow-down</v-icon>-->
-<!--                  </v-btn>-->
-<!--                </div>-->
-<!--              </v-card-title>-->
-<!--            </div>-->
-<!--          </v-card>-->
-<!--        </v-col>-->
       </v-row>
     </template>
+    <br>
+    <template>
+      <div class="text-center">
+        <v-pagination
+            v-model="page"
+            :length="count"
+            @input="getProductInfoByCategory"
+        ></v-pagination>
+      </div>
+    </template>
+    <br>
+    <br>
   </v-container>
 </template>
 
 <script>
-import router from "../router";
+
 
 export default {
   data: function () {
     return {
       alertVariable: false,
-      alertVariable1: false,
-      products: []
+      products: [],
+      page: 1,
+      search: '',
+      count: '',
     }
   },
-  // methods: {
-  //   saveToList: function () {
-  //   },
-  //   getProductInfoByCategory: function () {
-  //     this.$http.get('api/productController/productsByCategory?ourCategory=1')
-  //   }
-  //       .then(response => this.products = response.data)
-  //
-  // },
-  // mounted() {
-  //   this.getProductInfoByCategory(1)
-  // },
+  methods: {
+
+    getProductInfoByCategory: function () {
+      this.$http.get('api/productController/productsByCategory',
+          {
+            params: {
+              ourCategory: 1,
+              page: this.page,
+              search: this.search,
+            }
+          })
+          .then(response => this.products = response.data)
+    },
+    getPageCount: function () {
+      this.$http.get('api/productController/getPageCount/1')
+          .then(response => this.count = response.data)
+    },
+    userPick: function (product) {
+      let body = {
+        ean: product.ean
+      }
+      this.$http.post('api/productController/userPick', body)
+      product.alertVariable = !product.alertVariable
+    },
+  },
+  // "
+  mounted() {
+    this.getProductInfoByCategory()
+    this.getPageCount()
+  },
 }
 
 </script>
