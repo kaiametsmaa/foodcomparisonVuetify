@@ -10,13 +10,13 @@
         <template v-slot:default>
           <thead>
           <tr>
-            <th class="text-left">
+            <th class="text-left text-h6 black--text">
               Toote nimetus
             </th>
-            <th class="text-center">
+            <th class="text-center text-h6 black--text">
               Prisma hind
             </th>
-            <th class="text-center">
+            <th class="text-center text-h6 black--text">
               Selveri hind
             </th>
           </tr>
