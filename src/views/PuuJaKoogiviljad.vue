@@ -3,7 +3,8 @@
 <v-card class="cyan lighten-3">
     <h1 class="text-left pa-4">Puu- ja köögiviljad: </h1>
 <div class="text-right text-h5">
-    <input class="text-h6 "v-model="search" placeholder="Otsi toodet">
+    <input class="text-h6 "v-model="search" placeholder="Otsi toodet" v-on:keyup.enter="getProductInfoByCategory"
+           >
     <v-btn icon
            x-large
            @click="getProductInfoByCategory">
@@ -103,12 +104,13 @@ export default {
       products: [],
       page: 1,
       search: '',
-      count: '',
+      count: 0,
     }
   },
   methods: {
 
     getProductInfoByCategory: function () {
+      this.getPageCount()
       this.$http.get('api/productController/productsByCategory',
           {
             params: {
@@ -120,7 +122,12 @@ export default {
           .then(response => this.products = response.data)
     },
     getPageCount: function () {
-      this.$http.get('api/productController/getPageCount/1')
+      this.$http.get('api/productController/getPageCount/1',
+          {
+            params: {
+              search: this.search,
+            }
+          })
           .then(response => this.count = response.data)
     },
     userPick: function (product) {
@@ -134,7 +141,6 @@ export default {
   // "
   mounted() {
     this.getProductInfoByCategory()
-    this.getPageCount()
   },
 }
 
